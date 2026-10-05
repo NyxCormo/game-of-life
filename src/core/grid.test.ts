@@ -49,6 +49,16 @@ describe('Grid', () => {
     expect(grid.isAlive(3, 2)).toBe(true);
   });
 
+  it('tells whether a cell is inside the grid', () => {
+    const grid = new Grid(4, 3);
+
+    expect(grid.contains(0, 0)).toBe(true);
+    expect(grid.contains(3, 2)).toBe(true);
+    expect(grid.contains(-1, 0)).toBe(false);
+    expect(grid.contains(4, 2)).toBe(false);
+    expect(grid.contains(1.5, 1)).toBe(false);
+  });
+
   it.each([
     [-1, 0],
     [0, -1],

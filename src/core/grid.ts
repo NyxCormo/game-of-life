@@ -30,7 +30,7 @@ export class Grid {
     }
   }
 
-  private contains(x: number, y: number): boolean {
+  contains(x: number, y: number): boolean {
     return (
       Number.isInteger(x) &&
       Number.isInteger(y) &&
