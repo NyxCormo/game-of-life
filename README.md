@@ -2,7 +2,7 @@
 
 Simulation of Conway's Game of Life.
 
-## Installation 
+## Installation
 
 ```
 npm install
