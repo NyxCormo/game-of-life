@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "pipeline-dev": "npm run format && npm run lint && tsc && npm test"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
