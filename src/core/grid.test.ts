@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Grid } from '../../src/core/grid';
+import { Grid } from './grid';
 
 describe('Grid', () => {
   it('stores its dimensions', () => {
