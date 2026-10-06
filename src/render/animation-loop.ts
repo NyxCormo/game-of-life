@@ -19,6 +19,10 @@ export class AnimationLoop {
     this.render = render;
   }
 
+  get isRunning(): boolean {
+    return this.frameId !== null;
+  }
+
   start(): void {
     if (this.frameId !== null) {
       return;
