@@ -1,4 +1,5 @@
 import type { Grid } from '../core/grid';
+import type { CellPosition } from '../core/line';
 
 const DEAD_COLOR = '#111418';
 const ALIVE_COLOR = '#4ade80';
@@ -43,6 +44,16 @@ export class CanvasRenderer {
         }
       }
     }
+  }
+
+  cellAt(clientX: number, clientY: number): CellPosition {
+    const bounds = this.canvas.getBoundingClientRect();
+    const scaleX = this.canvas.width / bounds.width;
+    const scaleY = this.canvas.height / bounds.height;
+    return {
+      x: Math.floor(((clientX - bounds.left) * scaleX) / this.cellSize),
+      y: Math.floor(((clientY - bounds.top) * scaleY) / this.cellSize),
+    };
   }
 
   private fitTo(grid: Grid): void {

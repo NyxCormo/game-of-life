@@ -4,6 +4,7 @@ import { AnimationLoop } from './render/animation-loop';
 import { CanvasRenderer } from './render/canvas-renderer';
 import { requireElement } from './ui/dom';
 import { setupPlaybackControls } from './ui/playback-controls';
+import { setupPointerDrawing } from './ui/pointer-drawing';
 
 const canvas = requireElement('#board', HTMLCanvasElement);
 
@@ -32,3 +33,10 @@ setupPlaybackControls(loop, () => {
   advance();
   draw();
 });
+
+setupPointerDrawing(
+  canvas,
+  renderer,
+  () => grid,
+  () => draw,
+);
