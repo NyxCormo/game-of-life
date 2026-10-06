@@ -1,8 +1,9 @@
 import { Simulation } from './core/simulation';
 import { AnimationLoop } from './render/animation-loop';
 import { CanvasRenderer } from './render/canvas-renderer';
+import { SimulationView } from './render/simulation-view';
+import { setupBorderControls } from './ui/border-controls';
 import { requireElement } from './ui/dom';
-import { setupEdgeControl } from './ui/edge-control';
 import { setupGridControls } from './ui/grid-controls';
 import { setupPlaybackControls } from './ui/playback-controls';
 import { setupPointerDrawing } from './ui/pointer-drawing';
@@ -17,10 +18,11 @@ simulation.setAlive(2, 3, true);
 simulation.setAlive(3, 2, true);
 simulation.setAlive(3, 3, true);
 
+const view = new SimulationView(simulation);
 const renderer = new CanvasRenderer(canvas, 10);
 
 const draw = (): void => {
-  renderer.draw(simulation);
+  renderer.draw(view.cells, view.frame);
 };
 
 const loop = new AnimationLoop(
@@ -39,7 +41,7 @@ setupPlaybackControls(loop, () => {
   draw();
 });
 
-setupPointerDrawing(canvas, renderer, simulation, draw);
+setupPointerDrawing(canvas, renderer, simulation, view, draw);
 setupSpeedControl(loop);
-setupEdgeControl(simulation);
+setupBorderControls(simulation, view, draw);
 setupGridControls(simulation, draw);

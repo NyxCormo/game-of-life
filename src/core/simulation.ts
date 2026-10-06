@@ -25,6 +25,10 @@ export class Simulation implements CellView {
     return this.world.height - 2 * this.currentMargin;
   }
 
+  get worldCells(): CellView {
+    return this.world;
+  }
+
   get margin(): number {
     return this.currentMargin;
   }

@@ -1,15 +1,22 @@
 import { cellsBetween, type CellPosition } from '../core/line';
 import type { Simulation } from '../core/simulation';
 import type { CanvasRenderer } from '../render/canvas-renderer';
+import type { SimulationView } from '../render/simulation-view';
 
 export function setupPointerDrawing(
   canvas: HTMLCanvasElement,
   renderer: CanvasRenderer,
   simulation: Simulation,
+  view: SimulationView,
   onChange: () => void,
 ): void {
   let paintAlive = true;
   let lastCell: CellPosition | null = null;
+
+  const visibleCellAt = (event: PointerEvent): CellPosition => {
+    const cell = renderer.cellAt(event.clientX, event.clientY);
+    return { x: cell.x - view.offset, y: cell.y - view.offset };
+  };
 
   const paintTo = (cell: CellPosition): void => {
     for (const { x, y } of cellsBetween(lastCell ?? cell, cell)) {
@@ -25,7 +32,7 @@ export function setupPointerDrawing(
     if (event.button !== 0) {
       return;
     }
-    const cell = renderer.cellAt(event.clientX, event.clientY);
+    const cell = visibleCellAt(event);
     if (!simulation.contains(cell.x, cell.y)) {
       return;
     }
@@ -38,7 +45,7 @@ export function setupPointerDrawing(
     if (lastCell === null) {
       return;
     }
-    paintTo(renderer.cellAt(event.clientX, event.clientY));
+    paintTo(visibleCellAt(event));
   });
 
   const stopPainting = (): void => {

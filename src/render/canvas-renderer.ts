@@ -4,6 +4,15 @@ import type { CellPosition } from '../core/line';
 const DEAD_COLOR = '#111418';
 const ALIVE_COLOR = '#4ade80';
 const CELL_GAP = 1;
+const FRAME_COLOR = '#f59e0b';
+const FRAME_WIDTH = 2;
+
+export interface Frame {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+}
 
 export class CanvasRenderer {
   private readonly canvas: HTMLCanvasElement;
@@ -25,7 +34,7 @@ export class CanvasRenderer {
     this.cellSize = cellSize;
   }
 
-  draw(cells: CellView): void {
+  draw(cells: CellView, frame: Frame | null): void {
     this.fitTo(cells);
 
     this.context.fillStyle = DEAD_COLOR;
@@ -43,6 +52,17 @@ export class CanvasRenderer {
           );
         }
       }
+    }
+
+    if (frame !== null) {
+      this.context.strokeStyle = FRAME_COLOR;
+      this.context.lineWidth = FRAME_WIDTH;
+      this.context.strokeRect(
+        frame.x * this.cellSize,
+        frame.y * this.cellSize,
+        frame.width * this.cellSize,
+        frame.height * this.cellSize,
+      );
     }
   }
 

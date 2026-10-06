@@ -3,16 +3,16 @@ import { requireElement } from './dom';
 
 const RANDOM_DENSITY = 0.25;
 
-export const MIN_GRID_SIZE = 3;
-export const MAX_GRID_SIZE = 300;
+const MIN_GRID_SIZE = 3;
+const MAX_GRID_SIZE = 300;
 
-export function parseGridSize(text: string): number | null {
+export function parseIntegerInRange(
+  text: string,
+  min: number,
+  max: number,
+): number | null {
   const value = Number(text);
-  if (
-    !Number.isInteger(value) ||
-    value < MIN_GRID_SIZE ||
-    value > MAX_GRID_SIZE
-  ) {
+  if (!Number.isInteger(value) || value < min || value > max) {
     return null;
   }
   return value;
@@ -33,8 +33,16 @@ export function setupGridControls(
   };
 
   const applySize = (): void => {
-    const newWidth = parseGridSize(widthInput.value);
-    const newHeight = parseGridSize(heightInput.value);
+    const newWidth = parseIntegerInRange(
+      widthInput.value,
+      MIN_GRID_SIZE,
+      MAX_GRID_SIZE,
+    );
+    const newHeight = parseIntegerInRange(
+      heightInput.value,
+      MIN_GRID_SIZE,
+      MAX_GRID_SIZE,
+    );
     if (newWidth !== null && newHeight !== null) {
       simulation.resize(newWidth, newHeight);
       onChange();

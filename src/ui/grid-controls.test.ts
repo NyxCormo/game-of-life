@@ -1,23 +1,23 @@
 import { describe, expect, it } from 'vitest';
-import { MAX_GRID_SIZE, MIN_GRID_SIZE, parseGridSize } from './grid-controls';
+import { parseIntegerInRange } from './grid-controls';
 
-describe('parseGridSize', () => {
+describe('parseIntegerInRange', () => {
   it.each([
     ['60', 60],
-    [String(MIN_GRID_SIZE), MIN_GRID_SIZE],
-    [String(MAX_GRID_SIZE), MAX_GRID_SIZE],
-  ])('accepts "%s"', (text, expected) => {
-    expect(parseGridSize(text)).toBe(expected);
+    ['3', 3],
+    ['300', 300],
+  ])('accepts "%s" between 3 and 300', (text, expected) => {
+    expect(parseIntegerInRange(text, 3, 300)).toBe(expected);
   });
 
-  it.each([
-    '',
-    'abc',
-    '12.5',
-    String(MIN_GRID_SIZE - 1),
-    String(MAX_GRID_SIZE + 1),
-    '-10',
-  ])('rejects "%s"', (text) => {
-    expect(parseGridSize(text)).toBeNull();
+  it.each(['', 'abc', '12.5', '2', '301', '-10'])(
+    'rejects "%s" outside 3 to 300',
+    (text) => {
+      expect(parseIntegerInRange(text, 3, 300)).toBeNull();
+    },
+  );
+
+  it('accepts zero when the range starts at zero', () => {
+    expect(parseIntegerInRange('0', 0, 50)).toBe(0);
   });
 });

@@ -66,11 +66,12 @@
         font: inherit;
       }
 
-      .speed input {
+      .controls input[type='range'],
+      .controls input[type='checkbox'] {
         accent-color: #4ade80;
       }
 
-      .speed output {
+      .controls output {
         min-width: 64px;
       }
     </style>
@@ -80,7 +81,7 @@
     <div class="controls">
       <button id="play-button" type="button">Pause</button>
       <button id="step-button" type="button">Step</button>
-      <label class="speed">
+      <label>
         Speed:
         <input id="speed-input" type="range" min="1" max="60" />
         <output id="speed-value" for="speed-input"></output>
@@ -95,12 +96,23 @@
         x
         <input id="height-input" type="number" step="1" />
       </label>
+    </div>
+    <div class="controls">
       <label>
         Edges:
         <select id="edge-select">
           <option value="wrap">Wrapped</option>
           <option value="dead">Dead</option>
         </select>
+      </label>
+      <label>
+        Margin:
+        <input id="margin-input" type="range" min="0" />
+        <output id="margin-value" for="margin-input"></output>
+      </label>
+      <label>
+        <input id="show-margin-input" type="checkbox" />
+        Show margin
       </label>
     </div>
     <script type="module" src="/src/main.ts"></script>
