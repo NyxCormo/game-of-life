@@ -2,6 +2,10 @@ import { Grid } from './grid';
 
 export type EdgeMode = 'wrap' | 'dead';
 
+export function isEdgeMode(value: string): value is EdgeMode {
+  return value === 'wrap' || value === 'dead';
+}
+
 export function nextGeneration(grid: Grid, edgeMode: EdgeMode): Grid {
   const next = new Grid(grid.width, grid.height);
 
