@@ -4,9 +4,12 @@ import { AnimationLoop } from './render/animation-loop';
 import { CanvasRenderer } from './render/canvas-renderer';
 import { requireElement } from './ui/dom';
 import { setupEdgeControl } from './ui/edge-control';
+import { setupGridControls } from './ui/grid-controls';
 import { setupPlaybackControls } from './ui/playback-controls';
 import { setupPointerDrawing } from './ui/pointer-drawing';
 import { setupSpeedControl } from './ui/speed-control';
+
+const RANDOM_DENSITY = 0.25;
 
 const canvas = requireElement('#board', HTMLCanvasElement);
 
@@ -41,4 +44,18 @@ setupPointerDrawing(canvas, renderer, () => grid, draw);
 setupSpeedControl(loop);
 setupEdgeControl(edgeMode, (mode) => {
   edgeMode = mode;
+});
+setupGridControls(grid, {
+  resize: (width, height) => {
+    grid = grid.resized(width, height);
+    draw();
+  },
+  clear: () => {
+    grid = new Grid(grid.width, grid.height);
+    draw();
+  },
+  randomize: () => {
+    grid = Grid.random(grid.width, grid.height, RANDOM_DENSITY);
+    draw();
+  },
 });

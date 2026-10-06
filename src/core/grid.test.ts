@@ -59,6 +59,44 @@ describe('Grid', () => {
     expect(grid.contains(1.5, 1)).toBe(false);
   });
 
+  it('fills a random grid according to the density', () => {
+    const values = [0.1, 0.9, 0.3, 0.5];
+    let index = 0;
+    const grid = Grid.random(2, 2, 0.4, () => values[index++]);
+
+    expect(grid.isAlive(0, 0)).toBe(true);
+    expect(grid.isAlive(1, 0)).toBe(false);
+    expect(grid.isAlive(0, 1)).toBe(true);
+    expect(grid.isAlive(1, 1)).toBe(false);
+  });
+
+  it.each([-0.1, 1.5, Number.NaN])('rejects the density %s', (density) => {
+    expect(() => Grid.random(3, 3, density)).toThrow(RangeError);
+  });
+
+  it('keeps the cells that still fit after a resize', () => {
+    const grid = new Grid(4, 4);
+    grid.setAlive(1, 1, true);
+    grid.setAlive(3, 3, true);
+
+    const smaller = grid.resized(3, 2);
+
+    expect(smaller.width).toBe(3);
+    expect(smaller.height).toBe(2);
+    expect(smaller.isAlive(1, 1)).toBe(true);
+  });
+
+  it('adds dead cells when the grid grows', () => {
+    const grid = new Grid(2, 2);
+    grid.setAlive(1, 1, true);
+
+    const larger = grid.resized(4, 3);
+
+    expect(larger.isAlive(1, 1)).toBe(true);
+    expect(larger.isAlive(3, 2)).toBe(false);
+    expect(grid.width).toBe(2);
+  });
+
   it.each([
     [-1, 0],
     [0, -1],
