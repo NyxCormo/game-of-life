@@ -34,9 +34,4 @@ setupPlaybackControls(loop, () => {
   draw();
 });
 
-setupPointerDrawing(
-  canvas,
-  renderer,
-  () => grid,
-  () => draw,
-);
+setupPointerDrawing(canvas, renderer, () => grid, draw);
