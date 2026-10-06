@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Grid } from './grid';
-import { nextGeneration } from './rules';
+import { isEdgeMode, nextGeneration } from './rules';
 
 function gridFrom(rows: string[]): Grid {
   const grid = new Grid(rows[0].length, rows.length);
@@ -23,6 +23,16 @@ function rowsOf(grid: Grid): string[] {
   }
   return rows;
 }
+
+describe('isEdgeMode', () => {
+  it.each(['wrap', 'dead'])('accepts %s', (value) => {
+    expect(isEdgeMode(value)).toBe(true);
+  });
+
+  it.each(['', 'Wrap', 'torus'])('rejects "%s"', (value) => {
+    expect(isEdgeMode(value)).toBe(false);
+  });
+});
 
 describe('nextGeneration', () => {
   it('keeps an empty grid empty', () => {

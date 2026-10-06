@@ -1,7 +1,7 @@
 const MAX_FRAME_DURATION = 250;
 
 export class AnimationLoop {
-  private readonly stepDuration: number;
+  private currentStepsPerSecond: number;
   private readonly update: () => void;
   private readonly render: () => void;
   private frameId: number | null = null;
@@ -9,14 +9,21 @@ export class AnimationLoop {
   private pendingTime = 0;
 
   constructor(stepsPerSecond: number, update: () => void, render: () => void) {
-    if (!(stepsPerSecond > 0)) {
-      throw new RangeError(
-        `Steps per second must be positive, got ${stepsPerSecond}`,
-      );
-    }
-    this.stepDuration = 1000 / stepsPerSecond;
+    this.currentStepsPerSecond = checkStepsPerSecond(stepsPerSecond);
     this.update = update;
     this.render = render;
+  }
+
+  get stepsPerSecond(): number {
+    return this.currentStepsPerSecond;
+  }
+
+  set stepsPerSecond(value: number) {
+    this.currentStepsPerSecond = checkStepsPerSecond(value);
+  }
+
+  get isRunning(): boolean {
+    return this.frameId !== null;
   }
 
   start(): void {
@@ -40,12 +47,22 @@ export class AnimationLoop {
     this.pendingTime += Math.min(time - this.lastTime, MAX_FRAME_DURATION);
     this.lastTime = time;
 
-    while (this.pendingTime >= this.stepDuration) {
+    const stepDuration = 1000 / this.currentStepsPerSecond;
+    while (this.pendingTime >= stepDuration) {
       this.update();
-      this.pendingTime -= this.stepDuration;
+      this.pendingTime -= stepDuration;
     }
 
     this.render();
     this.frameId = requestAnimationFrame(this.tick);
   };
+}
+
+function checkStepsPerSecond(value: number): number {
+  if (!(value > 0)) {
+    throw new RangeError(
+      `Steps per second must be a positive number, got ${value}`,
+    );
+  }
+  return value;
 }
