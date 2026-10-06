@@ -1,4 +1,4 @@
-import type { Grid } from '../core/grid';
+import type { CellView } from '../core/grid';
 import type { CellPosition } from '../core/line';
 
 const DEAD_COLOR = '#111418';
@@ -25,16 +25,16 @@ export class CanvasRenderer {
     this.cellSize = cellSize;
   }
 
-  draw(grid: Grid): void {
-    this.fitTo(grid);
+  draw(cells: CellView): void {
+    this.fitTo(cells);
 
     this.context.fillStyle = DEAD_COLOR;
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.context.fillStyle = ALIVE_COLOR;
-    for (let y = 0; y < grid.height; y++) {
-      for (let x = 0; x < grid.width; x++) {
-        if (grid.isAlive(x, y)) {
+    for (let y = 0; y < cells.height; y++) {
+      for (let x = 0; x < cells.width; x++) {
+        if (cells.isAlive(x, y)) {
           this.context.fillRect(
             x * this.cellSize,
             y * this.cellSize,
@@ -56,9 +56,9 @@ export class CanvasRenderer {
     };
   }
 
-  private fitTo(grid: Grid): void {
-    const width = grid.width * this.cellSize;
-    const height = grid.height * this.cellSize;
+  private fitTo(cells: CellView): void {
+    const width = cells.width * this.cellSize;
+    const height = cells.height * this.cellSize;
     if (this.canvas.width !== width || this.canvas.height !== height) {
       this.canvas.width = width;
       this.canvas.height = height;

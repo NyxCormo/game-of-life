@@ -1,11 +1,7 @@
-import type { Grid } from '../core/grid';
+import type { Simulation } from '../core/simulation';
 import { requireElement } from './dom';
 
-export interface GridActions {
-  resize(width: number, height: number): void;
-  clear(): void;
-  randomize(): void;
-}
+const RANDOM_DENSITY = 0.25;
 
 export const MIN_GRID_SIZE = 3;
 export const MAX_GRID_SIZE = 300;
@@ -23,29 +19,25 @@ export function parseGridSize(text: string): number | null {
 }
 
 export function setupGridControls(
-  initialGrid: Grid,
-  actions: GridActions,
+  simulation: Simulation,
+  onChange: () => void,
 ): void {
   const widthInput = requireElement('#width-input', HTMLInputElement);
   const heightInput = requireElement('#height-input', HTMLInputElement);
   const clearButton = requireElement('#clear-button', HTMLButtonElement);
   const randomButton = requireElement('#random-button', HTMLButtonElement);
 
-  let width = initialGrid.width;
-  let height = initialGrid.height;
-
   const showSize = (): void => {
-    widthInput.value = String(width);
-    heightInput.value = String(height);
+    widthInput.value = String(simulation.width);
+    heightInput.value = String(simulation.height);
   };
 
   const applySize = (): void => {
     const newWidth = parseGridSize(widthInput.value);
     const newHeight = parseGridSize(heightInput.value);
     if (newWidth !== null && newHeight !== null) {
-      width = newWidth;
-      height = newHeight;
-      actions.resize(width, height);
+      simulation.resize(newWidth, newHeight);
+      onChange();
     }
     showSize();
   };
@@ -56,10 +48,12 @@ export function setupGridControls(
     input.addEventListener('change', applySize);
   }
   clearButton.addEventListener('click', () => {
-    actions.clear();
+    simulation.clear();
+    onChange();
   });
   randomButton.addEventListener('click', () => {
-    actions.randomize();
+    simulation.randomize(RANDOM_DENSITY);
+    onChange();
   });
 
   showSize();

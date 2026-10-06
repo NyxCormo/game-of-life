@@ -1,5 +1,4 @@
-import { Grid } from './core/grid';
-import { nextGeneration, type EdgeMode } from './core/rules';
+import { Simulation } from './core/simulation';
 import { AnimationLoop } from './render/animation-loop';
 import { CanvasRenderer } from './render/canvas-renderer';
 import { requireElement } from './ui/dom';
@@ -9,53 +8,38 @@ import { setupPlaybackControls } from './ui/playback-controls';
 import { setupPointerDrawing } from './ui/pointer-drawing';
 import { setupSpeedControl } from './ui/speed-control';
 
-const RANDOM_DENSITY = 0.25;
-
 const canvas = requireElement('#board', HTMLCanvasElement);
 
-let edgeMode: EdgeMode = 'wrap';
-let grid = new Grid(60, 40);
-grid.setAlive(1, 3, true);
-grid.setAlive(2, 1, true);
-grid.setAlive(2, 3, true);
-grid.setAlive(3, 2, true);
-grid.setAlive(3, 3, true);
+const simulation = new Simulation(60, 40, 0, 'wrap');
+simulation.setAlive(1, 3, true);
+simulation.setAlive(2, 1, true);
+simulation.setAlive(2, 3, true);
+simulation.setAlive(3, 2, true);
+simulation.setAlive(3, 3, true);
 
 const renderer = new CanvasRenderer(canvas, 10);
 
-const advance = (): void => {
-  grid = nextGeneration(grid, edgeMode);
-};
 const draw = (): void => {
-  renderer.draw(grid);
+  renderer.draw(simulation);
 };
 
-const loop = new AnimationLoop(10, advance, draw);
+const loop = new AnimationLoop(
+  10,
+  () => {
+    simulation.step();
+  },
+  draw,
+);
 
 draw();
 loop.start();
 
 setupPlaybackControls(loop, () => {
-  advance();
+  simulation.step();
   draw();
 });
 
-setupPointerDrawing(canvas, renderer, () => grid, draw);
+setupPointerDrawing(canvas, renderer, simulation, draw);
 setupSpeedControl(loop);
-setupEdgeControl(edgeMode, (mode) => {
-  edgeMode = mode;
-});
-setupGridControls(grid, {
-  resize: (width, height) => {
-    grid = grid.resized(width, height);
-    draw();
-  },
-  clear: () => {
-    grid = new Grid(grid.width, grid.height);
-    draw();
-  },
-  randomize: () => {
-    grid = Grid.random(grid.width, grid.height, RANDOM_DENSITY);
-    draw();
-  },
-});
+setupEdgeControl(simulation);
+setupGridControls(simulation, draw);

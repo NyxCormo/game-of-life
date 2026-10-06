@@ -1,4 +1,10 @@
-export class Grid {
+export interface CellView {
+  readonly width: number;
+  readonly height: number;
+  isAlive(x: number, y: number): boolean;
+}
+
+export class Grid implements CellView {
   readonly width: number;
   readonly height: number;
   private readonly cells: boolean[][];

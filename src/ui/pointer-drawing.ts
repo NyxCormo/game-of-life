@@ -1,21 +1,20 @@
-import type { Grid } from '../core/grid';
 import { cellsBetween, type CellPosition } from '../core/line';
+import type { Simulation } from '../core/simulation';
 import type { CanvasRenderer } from '../render/canvas-renderer';
 
 export function setupPointerDrawing(
   canvas: HTMLCanvasElement,
   renderer: CanvasRenderer,
-  currentGrid: () => Grid,
+  simulation: Simulation,
   onChange: () => void,
 ): void {
   let paintAlive = true;
   let lastCell: CellPosition | null = null;
 
   const paintTo = (cell: CellPosition): void => {
-    const grid = currentGrid();
     for (const { x, y } of cellsBetween(lastCell ?? cell, cell)) {
-      if (grid.contains(x, y)) {
-        grid.setAlive(x, y, paintAlive);
+      if (simulation.contains(x, y)) {
+        simulation.setAlive(x, y, paintAlive);
       }
     }
     lastCell = cell;
@@ -27,11 +26,10 @@ export function setupPointerDrawing(
       return;
     }
     const cell = renderer.cellAt(event.clientX, event.clientY);
-    const grid = currentGrid();
-    if (!grid.contains(cell.x, cell.y)) {
+    if (!simulation.contains(cell.x, cell.y)) {
       return;
     }
-    paintAlive = !grid.isAlive(cell.x, cell.y);
+    paintAlive = !simulation.isAlive(cell.x, cell.y);
     canvas.setPointerCapture(event.pointerId);
     paintTo(cell);
   });
