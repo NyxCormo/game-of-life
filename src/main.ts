@@ -5,6 +5,7 @@ import { CanvasRenderer } from './render/canvas-renderer';
 import { requireElement } from './ui/dom';
 import { setupPlaybackControls } from './ui/playback-controls';
 import { setupPointerDrawing } from './ui/pointer-drawing';
+import { setupSpeedControl } from './ui/speed-control';
 
 const canvas = requireElement('#board', HTMLCanvasElement);
 
@@ -35,3 +36,4 @@ setupPlaybackControls(loop, () => {
 });
 
 setupPointerDrawing(canvas, renderer, () => grid, draw);
+setupSpeedControl(loop);

@@ -24,8 +24,11 @@
 
       .controls {
         display: flex;
+        flex-wrap: wrap;
         justify-content: center;
+        align-items: center;
         gap: 8px;
+        color: #e5e7eb;
       }
 
       .controls button {
@@ -43,6 +46,20 @@
         opacity: 0.4;
         cursor: default;
       }
+
+      .speed {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .speed input {
+        accent-color: #4ade80;
+      }
+
+      .speed output {
+        min-width: 64px;
+      }
     </style>
   </head>
   <body>
@@ -50,6 +67,11 @@
     <div class="controls">
       <button id="play-button" type="button">Pause</button>
       <button id="step-button" type="button">Step</button>
+      <label class="speed">
+        Speed:
+        <input id="speed-input" type="range" min="1" max="60" />
+        <output id="speed-value" for="speed-input"></output>
+      </label>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
